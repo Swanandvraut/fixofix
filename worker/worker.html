@@ -286,7 +286,7 @@ document.getElementById("workerForm").addEventListener("submit", async (e) => {
 
   try {
     // Check if worker exists
-    const checkResponse = await fetch(`http://localhost:3000/check-worker?email=${email}`);
+    const checkResponse = await fetch(`/check-worker?email=${email}`);
     const checkResult = await checkResponse.json();
 
     if (checkResult.exists) {
