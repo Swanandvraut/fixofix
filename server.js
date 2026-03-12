@@ -17,20 +17,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // ✅ CORS setup for multiple origins
 // include localhost:3000 so requests from pages served by this server are allowed
 const allowedOrigins = [
-'http://127.0.0.1:5500',
-'http://localhost:5500',
-'http://localhost:3000',
-'https://fixofix.onrender.com'
+  "http://127.0.0.1:5500",
+  "http://localhost:5500",
+  "http://localhost:3000",
+  "https://fixofix-9kd9.onrender.com"
 ];
+
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true // send cookies/session
+  origin: true,
+  credentials: true
 }));
 
 // ✅ Session setup
