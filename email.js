@@ -1,33 +1,24 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+// email.js
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendEmail(to, subject, text, html = "") {
   try {
 
-    await transporter.sendMail({
-      from: `"FixoFix" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-      html,
+    const response = await resend.emails.send({
+      from: "FixoFix <onboarding@resend.dev>",   // temporary sender
+      to: to,
+      subject: subject,
+      text: text,
+      html: html || `<p>${text}</p>`
     });
 
-    console.log("✅ Email sent successfully to:", to);
+    console.log("✅ Email sent:", response);
 
-  } catch (err) {
+  } catch (error) {
 
-    console.error("❌ Email sending error:", err);
+    console.error("❌ Email sending error:", error);
 
   }
 }
