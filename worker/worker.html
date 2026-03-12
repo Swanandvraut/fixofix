@@ -301,7 +301,7 @@ document.getElementById("workerForm").addEventListener("submit", async (e) => {
     }
 
     // First-time registration
-    const response = await fetch("http://localhost:3000/register-worker", {
+    const response = await fetch("/register-worker", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, phone, password, category_id, experience, location: area, aadhaar_number: aadhaar })
