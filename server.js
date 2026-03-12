@@ -1985,7 +1985,7 @@ app.get('/api/worker/wallet', async (req, res) => {
       FROM payments p
       JOIN bookings b ON p.booking_id = b.id
       JOIN connections c ON c.booking_id = b.id
-      JOIN service_providers s ON s.id = c.worker_id
+      JOIN service_providers s ON s.id = c.provider_id 
       WHERE s.email = $1
       ORDER BY p.paid_at DESC
     `, [email]);
