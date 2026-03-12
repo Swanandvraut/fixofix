@@ -285,7 +285,7 @@
   async function fetchWorkers() {
     showWorkersLoader();
     try {
-      const response = await fetch('http://127.0.0.1:3000/api/workers');
+      const response = await fetch('/api/workers');
       workers = await response.json();
 
       // Normalize id's to number if strings
@@ -396,7 +396,7 @@
     modalWorkerServiceCity.textContent = `${worker.service || worker.service_type || '—'} • ${worker.location || worker.city || '—'}`;
 
     try {
-      const res = await fetch('http://127.0.0.1:3000/api/bookings');
+      const res = await fetch('/api/bookings');
       if (!res.ok) throw new Error('Failed fetching bookings');
       let bookings = await res.json();
 
@@ -537,7 +537,7 @@
       reqBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> Sending`;
 
       try {
-      const resp = await fetch('http://127.0.0.1:3000/api/assign-worker-to-customer', {
+      const resp = await fetch('/api/assign-worker-to-customer', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ workerId: selectedWorker.id, bookingId }),

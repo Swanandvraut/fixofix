@@ -227,7 +227,7 @@
   // 1. Load latest booking from Backend
   window.addEventListener('DOMContentLoaded', async () => {
     try {
-      const res = await fetch('http://localhost:3000/latest-booking', { credentials: 'include' });
+      const res = await fetch('/latest-booking', { credentials: 'include' });
       const data = await res.json();
       
       if(!res.ok) {

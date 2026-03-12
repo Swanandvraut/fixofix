@@ -723,7 +723,7 @@ async function fetchLatestBooking() {
 
     try {
 
-        const res = await fetch('http://localhost:3000/latest-booking-with-worker', {
+        const res = await fetch('/latest-booking-with-worker', {
 
             credentials: 'include'
 
@@ -879,7 +879,7 @@ async function fetchFinalBill(showModal = false) {
 
     try {
 
-        const billRes = await fetch(`http://localhost:3000/api/customer/final-bill/${latestBookingId}`, {
+        const billRes = await fetch(`/api/customer/final-bill/${latestBookingId}`, {
 
             method: 'GET',
 
@@ -970,7 +970,7 @@ async function submitPayment(method) {
     const amount = document.getElementById("chargeAmount").textContent;
 
     // Update connection (your existing API)
-    const res = await fetch('http://localhost:3000/api/submit-charge', {
+    const res = await fetch('/api/submit-charge', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1105,7 +1105,7 @@ async function submitNegotiationCounter() {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/customer/submit-counter', {
+    const res = await fetch('/api/customer/submit-counter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -1146,7 +1146,7 @@ async function acceptWorkerOffer() {
   try {
 
     const res = await fetch(
-      'http://localhost:3000/api/customer/accept-negotiation',
+      '/api/customer/accept-negotiation',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1197,7 +1197,7 @@ async function goForNegotiation() {
   if (!latestBookingId) return alert("No booking found");
 
   try {
-    const res = await fetch(`http://localhost:3000/api/customer/latest-negotiation?booking_id=${latestBookingId}`, {
+    const res = await fetch(`/api/customer/latest-negotiation?booking_id=${latestBookingId}`, {
       credentials: 'include'
     });
     const data = await res.json();
@@ -1237,7 +1237,7 @@ async function savePaymentToDB(method, transactionId = null) {
 
   try {
 
-    const res = await fetch('http://localhost:3000/api/payment/save', {
+    const res = await fetch('/api/payment/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
