@@ -16,8 +16,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS setup for multiple origins
 // include localhost:3000 so requests from pages served by this server are allowed
-const allowedOrigins = ['http://127.0.0.1:5500', 'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:5500']; // your frontend
-
+const allowedOrigins = [
+'http://127.0.0.1:5500',
+'http://localhost:5500',
+'http://localhost:3000',
+'https://fixofix.onrender.com'
+];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -51,8 +55,10 @@ app.use(session({
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // For frontend (if served from backend)
-app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(__dirname));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "customer", "index.html"));
+});
 
 /* ================= ROUTES ================= */
 
@@ -63,9 +69,6 @@ app.use("/", verificationRoutes);
 
 /* ================= TEST ROUTE ================= */
 
-app.get("/", (req, res) => {
-  res.send("FixoFix Backend Running ✅");
-});
 
 
 // ✅ Route: Register a user (with password hashing and email check)
@@ -99,7 +102,7 @@ try {
     <div style="font-family: Arial, sans-serif; line-height:1.6; color:#333;">
       <h2 style="color:#2c3e50;">Welcome to FixoFix, ${newUser.name}!</h2>
       <p>We’re excited to have you on board.</p>
-      <a href="http://localhost:3000/login.html">CLICK ME</a>
+      <a href="https://fixofix.onrender.com/login.html">CLICK ME</a>
     </div>
     `
   );
@@ -311,7 +314,7 @@ app.post('/register-worker', async (req, res) => {
         <p>
           Login to your dashboard and set your availability to <b>Online</b> to start receiving jobs.
         </p>
-        <a href="http://localhost:3000/worker-login.html">Go to Worker Login</a>
+        <a href="https://fixofix.onrender.com/worker-login.html">Go to Worker Login</a>
         <hr/>
         <p style="font-size:12px; color:#888;">
           This is an automated message. Please do not reply.
@@ -404,9 +407,7 @@ app.post('/verify-aadhaar', async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+
 
 // Worker Login
 // ✅ UPDATED LOGIN WORKER (Paste this version)
@@ -2169,7 +2170,9 @@ app.post("/verify-email-otp", async (req, res) => {
 
 
 
-// Start server
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+

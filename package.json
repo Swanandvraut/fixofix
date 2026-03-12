@@ -1,7 +1,7 @@
 {
   "name": "node",
   "version": "1.0.0",
-  "main": "db.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,7 +11,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "connect-pg-simple": "^10.0.0",
@@ -24,5 +23,8 @@
     "nodemailer": "^7.0.5",
     "pg": "^8.20.0",
     "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
