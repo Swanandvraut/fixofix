@@ -286,26 +286,77 @@ document.getElementById("workerForm").addEventListener("submit", async (e) => {
 
   try {
     // Check if worker exists
-    const checkResponse = await fetch(`/check-worker?email=${email}`);
-    const checkResult = await checkResponse.json();
+    // Check if worker exists
+const checkResponse = await fetch(`/check-worker?email=${email}`);
+const checkResult = await checkResponse.json();
 
-    if (checkResult.exists) {
-      if (checkResult.is_verified) {
-        showToast("Account already exists. Redirecting to login...", 'info');
-        setTimeout(() => window.location.href = "worker-login.html", 2000);
-      } else {
-        document.getElementById("aadhaarDiv").style.display = "block";
-        showToast("Please provide Aadhaar number for verification.", 'warning');
-      }
-      return;
-    }
+if (checkResult.exists) {
 
-    // First-time registration
-    const response = await fetch("/register-worker", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, password, category_id, experience, location: area, aadhaar_number: aadhaar })
-    });
+  if (checkResult.is_verified) {
+
+    showToast("Account already exists. Redirecting to login...", "info");
+
+    setTimeout(() => {
+      window.location.href = "worker-login.html";
+    }, 2000);
+
+    return;
+  }
+
+  // Worker exists but not verified
+  const aadhaarInput = document.getElementById("aadhaar");
+
+  document.getElementById("aadhaarDiv").style.display = "block";
+
+  if (!aadhaarInput.value.trim()) {
+    showToast("Please provide Aadhaar number for verification.", "warning");
+    return;
+  }
+
+  const verifyResponse = await fetch("/verify-aadhaar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email,
+      aadhaar_number: aadhaarInput.value.trim()
+    })
+  });
+
+  const verifyResult = await verifyResponse.json();
+
+  if (verifyResponse.ok) {
+
+    showToast("Aadhaar verification submitted!", "success");
+
+    setTimeout(() => {
+      window.location.href = "worker-login.html";
+    }, 1500);
+
+  } else {
+
+    showToast(verifyResult.error || "Verification failed", "danger");
+
+  }
+
+  return;
+}
+
+// First-time registration continues here
+const response = await fetch("/register-worker", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name,
+    email,
+    phone,
+    password,
+    category_id,
+    experience,
+    location: area
+  })
+});
 
     const result = await response.json();
 
