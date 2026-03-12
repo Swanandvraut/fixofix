@@ -30,20 +30,18 @@ app.use(cors({
 
 // ✅ Session setup
 app.use(session({
-  name: "fixofix.sid", // 👈 ADD THIS
-  secret: 'my_very_long_random_secret_key_1234567890',
+  name: "fixofix.sid",
+  secret: process.env.SESSION_SECRET || "fixofix_secret_key",
   resave: false,
   saveUninitialized: false,
 
   cookie: {
     httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production", // ✅ important
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 1000 * 60 * 60
   }
 }));
-
-
 
 
 // For uploaded documents
