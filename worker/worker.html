@@ -298,47 +298,19 @@ if (checkResult.exists) {
 
     setTimeout(() => {
       window.location.href = "worker-login.html";
-    }, 2000);
-
-    return;
-  }
-
-  // Worker exists but not verified
-  const aadhaarInput = document.getElementById("aadhaar");
-
-  document.getElementById("aadhaarDiv").style.display = "block";
-
-  if (!aadhaarInput.value.trim()) {
-    showToast("Please provide Aadhaar number for verification.", "warning");
-    return;
-  }
-
-  const verifyResponse = await fetch("/verify-aadhaar", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      email,
-      aadhaar_number: aadhaarInput.value.trim()
-    })
-  });
-
-  const verifyResult = await verifyResponse.json();
-
-  if (verifyResponse.ok) {
-
-    showToast("Aadhaar verification submitted!", "success");
-
-    setTimeout(() => {
-      window.location.href = "worker-login.html";
     }, 1500);
 
-  } else {
-
-    showToast(verifyResult.error || "Verification failed", "danger");
-
+    return;
   }
+
+  // Worker exists but not verified → go to verification page
+  sessionStorage.setItem("workerEmail", email);
+
+  showToast("Please complete verification.", "warning");
+
+  setTimeout(() => {
+    window.location.href = "worker-verification.html";
+  }, 1500);
 
   return;
 }
