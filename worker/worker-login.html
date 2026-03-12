@@ -270,50 +270,59 @@
 
     // Basic Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      showToast('Please enter a valid email address.', 'warning');
+if (!emailRegex.test(email)) {
+  showToast('Please enter a valid email address.', 'warning');
+  return;
+}
+
+try {
+
+  const res = await fetch("/login-worker", {
+    method: 'POST',
+    credentials: 'include', // important for sessions
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();   // ✅ FIXED
+
+  if (res.ok && data.worker) {     // ✅ FIXED
+
+    // 1️⃣ Check verification
+    if (!data.worker.is_verified) {
+      showToast('Verification incomplete. Redirecting...', 'warning');
+      sessionStorage.setItem('workerEmail', data.worker.email);
+
+      setTimeout(() => {
+        window.location.href = 'worker-verification.html';
+      }, 1500);
+
       return;
     }
 
-    try {
-     const res = await fetch("/login-worker", {
-  method: 'POST',
-  credentials: 'include', // 🔥 VERY IMPORTANT
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, password })
-});
+    // 2️⃣ Save session data
+    sessionStorage.clear();
+    sessionStorage.setItem('workerEmail', data.worker.email);
+    sessionStorage.setItem('workerId', data.worker.id);
 
+    showToast('Login Successful!', 'success');
 
-      const data = await response.json();
+    // 3️⃣ Redirect
+    setTimeout(() => {
+      window.location.href = 'worker-home.html';
+    }, 1000);
 
-      if (response.ok && data.worker) {
-        // 1. Check if worker is verified
-        if (!data.worker.is_verified) {
-          showToast('Verification incomplete. Redirecting...', 'warning');
-          sessionStorage.setItem('workerEmail', data.worker.email);
-          setTimeout(() => { window.location.href = 'worker-verification.html'; }, 1500);
-          return;
-        }
+  } else {
+    showToast(data.error || 'Invalid credentials.', 'danger');
+  }
 
-        // 2. Clear and set new session
-        sessionStorage.clear();
-        sessionStorage.setItem('workerEmail', data.worker.email);
-        sessionStorage.setItem('workerId', data.worker.id);
+} catch (error) {
+  console.error(error);
+  showToast('Server error. Please try again later.', 'danger');
+}
 
-        showToast('Login Successful!', 'success');
-        
-        // 3. Redirect to worker home
-        setTimeout(() => { window.location.href = 'worker-home.html'; }, 1000);
-      } else {
-        showToast(data.error || 'Invalid credentials.', 'danger');
-      }
-    } catch (error) {
-      console.error(error);
-      showToast('Server error. Please try again later.', 'danger');
-    }
-  });
+});   // ✅ THIS WAS MISSING
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
