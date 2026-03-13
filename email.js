@@ -7,7 +7,7 @@ async function sendEmail(to, subject, text, html = "") {
   try {
 
     const response = await resend.emails.send({
-      from: "FixoFix <onboarding@resend.dev>",   // temporary sender
+      from: "FixoFix <onboarding@resend.dev>",   
       to: to,
       subject: subject,
       text: text,

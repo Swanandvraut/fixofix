@@ -11,6 +11,8 @@ const path = require("path");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -24,7 +26,12 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: true,
+  origin: [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://localhost:3000",
+    "https://fixofix-9kd9.onrender.com"
+  ],
   credentials: true
 }));
 
