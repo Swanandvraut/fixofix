@@ -1,54 +1,35 @@
-app.post("/send-email-otp", async (req, res) => {
+// email.js
+const nodemailer = require("nodemailer");
+require("dotenv").config();
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+async function sendEmail(to, subject, text, html = "") {
 
   try {
 
-    console.log("FULL BODY:", req.body);
-    console.log("EMAIL:", req.body.email);
+    const info = await transporter.sendMail({
+      from: `"FixoFix" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: subject,
+      text: text,
+      html: html || `<p>${text}</p>`
+    });
 
-    const { email } = req.body;
+    console.log("✅ Email sent:", info.response);
 
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
+  } catch (error) {
 
-    const user = await pool.query(
-      "SELECT id FROM service_providers WHERE email=$1",
-      [email]
-    );
+    console.error("❌ Email error:", error);
 
-    if (user.rows.length === 0) {
-      return res.status(400).json({ error: "Email not registered" });
-    }
-
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const expiry = new Date(Date.now() + 5 * 60000);
-
-    await pool.query(
-      `UPDATE service_providers
-       SET email_otp=$1, otp_expiry=$2
-       WHERE email=$3`,
-      [otp, expiry, email]
-    );
-
-    // ✅ SEND EMAIL
-    await sendEmail(
-      email,
-      "FixoFix Email Verification OTP",
-      `Your OTP is ${otp}. It expires in 5 minutes.`,
-      `<h2>Your OTP is <b>${otp}</b></h2>
-       <p>This OTP will expire in 5 minutes.</p>`
-    );
-
-    console.log("✅ OTP Email Sent:", otp);
-
-    res.json({ success: true });
-
-  } catch (err) {
-
-    console.error("Send OTP Error:", err);
-
-    res.status(500).json({ error: "Server error" });
   }
 
-});
+}
+
+module.exports = sendEmail;
