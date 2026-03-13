@@ -1,4 +1,3 @@
-// email.js
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
@@ -22,11 +21,11 @@ async function sendEmail(to, subject, text, html = "") {
       html: html || `<p>${text}</p>`
     });
 
-    console.log("✅ Email sent:", info.response);
+    console.log("Email sent:", info.response);
 
   } catch (error) {
 
-    console.error("❌ Email error:", error);
+    console.error("Email error:", error);
 
   }
 
