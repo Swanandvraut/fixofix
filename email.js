@@ -1,31 +1,24 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendEmail(to, subject, text, html = "") {
 
   try {
 
-    const info = await transporter.sendMail({
-      from: `"FixoFix" <${process.env.EMAIL_USER}>`,
+    const response = await resend.emails.send({
+      from: "FixoFix <onboarding@resend.dev>",
       to: to,
       subject: subject,
       text: text,
       html: html || `<p>${text}</p>`
     });
 
-    console.log("Email sent:", info.response);
+    console.log("✅ Email sent:", response);
 
   } catch (error) {
 
-    console.error("Email error:", error);
+    console.error("❌ Email sending error:", error);
 
   }
 

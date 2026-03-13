@@ -2080,7 +2080,12 @@ app.post("/send-email-otp", async (req, res) => {
       WHERE email=$3
     `, [otp, expiry, email]);
 
-    await sendEmail(email, `Your OTP is: ${otp}`);
+    await sendEmail(
+  email,
+  "FixoFix Email Verification OTP",
+  `Your OTP is ${otp}. It will expire in 5 minutes.`,
+  `<h2>Your OTP is <b>${otp}</b></h2><p>This OTP will expire in 5 minutes.</p>`
+);
 
     res.json({ success: true });
 
